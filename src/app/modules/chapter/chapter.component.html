@@ -1,0 +1,220 @@
+<div class="row">
+  <nz-skeleton [nzLoading]="loading" [nzActive]="true">
+    <div class="col-md-12 text-white-jw"
+      *ngIf="!isVisibleEditChapterModal"
+      >
+      <h5 class="text-white-jw">
+        <!-- {{chapter[0].chapter_title}} -->
+        Chapter Title
+      </h5>
+      <p>
+        <!-- {{chapter[0].chapter_description}} -->
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos commodi deleniti autem cum? Culpa, aut. Ex maxime, recusandae magni dicta, fugiat similique aliquid repellendus repellat mollitia ipsam nisi beatae odit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda id aperiam harum. Quisquam voluptas suscipit voluptates distinctio ex cupiditate laboriosam, harum illo rem quaerat consectetur quibusdam accusantium dolorem cumque consequatur. Veniam similique debitis repellendus quam aspernatur atque sequi magni reiciendis earum nihil adipisci deserunt impedit, numquam, iusto accusamus consectetur beatae!
+      </p>
+    </div>
+
+    <!-- Edit Chapter -->
+    <div class="edit-chapter-wrap text-white-jw" style="width: 100%;" *ngIf="isVisibleEditChapterModal">
+      <div class="col-md-12">
+        <nz-tooltip nzTrigger="focus" nzPlacement="bottom">
+          <label for="">Title</label>
+          <input nz-input placeholder="Title" style="width: 100%" [(ngModel)]="chapterEditTitle" />
+        </nz-tooltip>
+      </div>
+      <div class="col-md-12 mt-3">
+        <label for="">Description</label>
+        <textarea rows="4" nz-input [(ngModel)]="chapterEditDescription"></textarea>
+      </div>
+      <div class="col-md-12 mt-3">
+        <button nz-button nzType="primary" (click)="handleEditRealChapter()" nzShape="round"> Update
+          Chapter</button>
+        <button nz-button nzType="light" class="ml-2" (click)="handleCancelEditChapterModal()"
+          nzShape="round">Cancel</button>
+      </div>
+    </div>
+    <!-- **** **** -->
+
+    <nz-divider></nz-divider>
+    <div class="col-md-12">
+      <button nz-button class="mr-3" nzType="primary" *ngIf="!isAddPageVisible" (click)="showAddPageModal()"
+        nzShape="round"><i nz-icon nzType="plus"></i> Add
+        Page</button>
+      <button class="mr-3" nz-button nzType="dashed" *ngIf="!isVisibleEditChapterModal"
+        (click)="showEditChapterModal(chapter)" nzShape="round"><i nz-icon nzType="edit" nzTheme="outline"></i> Edit
+        Chapter</button>
+      <button nz-button nz-popconfirm nzPopconfirmTitle="Are you sure delete this chapter?"
+        nzPopconfirmPlacement="bottom" (nzOnConfirm)="deleteChapter(chapter)" (nzOnCancel)="deleteCancel()"
+        nzType="danger" nzShape="round"><i nz-icon nzType="delete" nzTheme="outline"></i> Delete
+        Chapter</button>
+    </div>
+    <nz-divider></nz-divider>
+
+    <!-- Add Page -->
+    <div class="col-md-12 mt-3 mb-5" *ngIf="isAddPageVisible"
+      style="background: #eee; padding: 25px 15px; border-radius: 5px;">
+      <h4>Add Page</h4>
+      <div class="row">
+        <div class="col-md-12">
+          <nz-tooltip nzTrigger="focus" nzPlacement="bottom">
+            <label for="" class="text-dark">Page Title</label>
+            <input nz-input placeholder="Title" style="width: 100%" [(ngModel)]="pageTitle" />
+          </nz-tooltip>
+        </div>
+        <div class="col-md-12 mt-3">
+          <label for="" class="text-dark">Page Content</label>
+          <ckeditor class="text-dark" [editor]="Editor" [(ngModel)]="pageDescription" (ready)="onReadyCkEditor($event)"
+            [config]="editorConfig">
+          </ckeditor>
+        </div>
+        <div class="col-md-12 mt-3">
+          <button nz-button nzType="primary" (click)="handleOk()" nzShape="round"><i nz-icon nzType="plus"></i> Add
+            Page</button>
+          <button nz-button nzType="light" class="ml-2" (click)="handleCancel()" nzShape="round">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </nz-skeleton>
+  <!-- *** *** -->
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <h6 class="text-white-jw">PAGES</h6>
+  </div>
+</div>
+
+<nz-skeleton [nzLoading]="loadingPages" [nzActive]="true">
+  <div class="row">
+    <div class="col-md-10">
+      <!-- <p
+        *ngIf="pages.length == 0"
+      >
+        No pages added for this course. Please add pages.
+      </p> -->
+      <ul class="list-group">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <h6 style="font-weight: 300; letter-spacing: .5px;">
+            <!-- {{page.page_title}} -->
+            Lorem ipsum dolor sit amet.
+          </h6>
+          <div class="action">
+            <button nz-button class="mr-2" nzType="link" (click)="showViewPageModal()">
+              <span nz-text nzType="primary">View</span>
+            </button>
+            <button nz-button class="mr-2" nzType="link" (click)="editPageModal()">
+              <span nz-text nzType="primary"><i nz-icon nzType="edit" nzTheme="outline"></i> Edit</span>
+            </button>
+            <button nz-button class="mr-2" color="danger" nzType="link" nz-popconfirm
+              nzPopconfirmTitle="Are you sure delete this page?" nzPopconfirmPlacement="bottom"
+              (nzOnConfirm)="deletePage()" (nzOnCancel)="deletePageCancel()">
+              <span nz-text nzType="danger">Delete</span>
+            </button>
+            <!-- <button nz-button nz-dropdown [nzDropdownMenu]="menu">Actions<i nz-icon nzType="down"></i></button>
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+              <ul nz-menu>
+                <li nz-menu-item>
+                  <a (click)="editPageModal(page)"> <i nz-icon nzType="edit" nzTheme="outline"></i> EDIT</a>
+                </li>
+                <li nz-menu-item>
+                  <a nzType="danger" nz-popconfirm nzPopconfirmTitle="Are you sure delete this page?" nzPopconfirmPlacement="bottom"
+        (nzOnConfirm)="deletePage(page)" (nzOnCancel)="deletePageCancel()"><i nz-icon nzType="delete" nzTheme="fill"></i> DELETE</a>
+                </li>
+              </ul>
+            </nz-dropdown-menu> -->
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+</nz-skeleton>
+
+
+<!-- Add Page Modal -->
+<!-- <nz-modal [(nzVisible)]="isAddPageVisible" nzTitle="Add Page" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" nzWidth="75%">
+  <div class="row">
+    <div class="col-md-12">
+      <nz-tooltip nzTrigger="focus" nzPlacement="bottom">
+        <label for="">Page Title</label>
+        <input nz-input placeholder="Title" style="width: 100%" [(ngModel)]="pageTitle" />
+      </nz-tooltip>
+    </div>
+    <div class="col-md-12 mt-3">
+      <label for="">Page Content</label>
+      <ckeditor [editor]="Editor" [(ngModel)]="pageDescription" (ready)="onReadyCkEditor($event)" [config]="editorConfig"></ckeditor>
+    </div>
+  </div>
+</nz-modal> -->
+
+
+<!-- View Page Modal -->
+<!-- <nz-modal [(nzVisible)]="isVisibleViewPageModal" nzTitle="{{pageViewTitle}}" (nzOnCancel)="handleCancelViewPageModal()" (nzOnOk)="closeViewModal()"
+  nzWidth="75%">
+  <div class="pageViewModal" [innerHtml]="pageViewDescription"></div>
+</nz-modal> -->
+
+<!-- Edit Page Modal -->
+<!-- <nz-modal [(nzVisible)]="isVisibleEditPageModal" nzTitle="Edit Page" (nzOnCancel)="handleCancelEditPageModal()" (nzOnOk)="handleEditChapter()"
+  nzWidth="75%">
+  <div class="row">
+    <div class="col-md-12">
+      <nz-tooltip nzTrigger="focus" nzPlacement="bottom">
+        <label for="">Page Title</label>
+        <input nz-input placeholder="Title" style="width: 100%" [(ngModel)]="pageViewTitle" />
+      </nz-tooltip>
+    </div>
+    <div class="col-md-12 mt-3">
+      <label for="">Page Content</label>
+      <ckeditor [editor]="Editor" [(ngModel)]="pageViewDescription" [config]="editorConfig"></ckeditor>
+    </div>
+  </div>
+</nz-modal> -->
+
+<!-- Edit Chapter Modal -->
+<!-- <nz-modal [(nzVisible)]="isVisibleEditChapterModal" nzTitle="Edit Chapter" (nzOnCancel)="handleCancelEditChapterModal()"
+  (nzOnOk)="handleEditRealChapter()" nzWidth="75%">
+  <div class="row">
+    <div class="col-md-12">
+      <nz-tooltip nzTrigger="focus" nzPlacement="bottom">
+        <label for="">Title</label>
+        <input nz-input placeholder="Title" style="width: 100%" [(ngModel)]="chapterEditTitle" />
+      </nz-tooltip>
+    </div>
+    <div class="col-md-12 mt-3">
+      <label for="">Description</label>
+      <textarea rows="4" nz-input [(ngModel)]="chapterEditDescription"></textarea>
+    </div>
+  </div>
+</nz-modal> -->
+
+<!-- SHOW PAGE -->
+<nz-drawer [nzClosable]="true" nzHeight="100%" [nzVisible]="isVisibleViewPageModal" nzPlacement="bottom"
+  nzTitle="{{pageViewTitle}}" (nzOnClose)="handleCancelViewPageModal()">
+  <div class="viewPageWrap" style="overflow-y: scroll; height: 100vh;">
+    <div class="pageViewModal" style="margin-bottom: 120px;" [innerHtml]="pageViewDescription"></div>
+  </div>
+</nz-drawer>
+
+<!-- EDIT PAGE -->
+<nz-drawer [nzClosable]="true" nzHeight="100%" [nzVisible]="isVisibleEditPageModal" nzPlacement="bottom"
+  nzTitle="EDIT PAGE ({{pageViewTitle}})" (nzOnClose)="handleCancelEditPageModal()">
+  <div class="row">
+    <div class="col-md-12">
+      <nz-tooltip nzTrigger="focus" nzPlacement="bottom">
+        <label for="">Page Title</label>
+        <input nz-input placeholder="Title" style="width: 100%" [(ngModel)]="pageViewTitle" />
+      </nz-tooltip>
+    </div>
+    <div class="col-md-12 mt-3">
+      <label for="">Page Content</label>
+      <ckeditor [editor]="Editor" [(ngModel)]="pageViewDescription" (ready)="onReadyCkEditor($event)"
+        [config]="editorConfig"></ckeditor>
+    </div>
+    <div class="col-md-12 mt-5">
+      <button nz-button nzType="primary" (click)="handleEditChapter()" nzShape="round"> Update
+        Page</button>
+      <button nz-button nzType="light" class="ml-2" (click)="handleCancelEditPageModal()"
+        nzShape="round">Cancel</button>
+    </div>
+  </div>
+</nz-drawer>

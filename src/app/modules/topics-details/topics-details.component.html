@@ -1,0 +1,301 @@
+<div class="" style="display: flex;">
+  <div class="mr-3">
+    <!-- <div class="">
+      <img width="100%" style="border-radius: 5px;" src="https://trainingapp-img.s3.ap-south-1.amazonaws.com/{{courseDetails.cover_img}}" alt="">
+    </div> -->
+    <nz-upload class="avatar-uploader" nzName="avatar" nzListType="picture-card" [nzShowUploadList]="false"
+      (nzChange)="savedStoriesAvatarChange($event)">
+      <ng-container *ngIf="!coverImg">
+        <i class="upload-icon" nz-icon [nzType]="loading ? 'loading' : 'plus'"></i>
+        <div class="ant-upload-text">Upload</div>
+      </ng-container>
+      <img style="border-radius: 5px;" *ngIf="coverImg" [src]="coverImg" class="avatar" />
+    </nz-upload>
+  </div>
+  <div class="" *ngIf="!isVisibleCourseModal">
+    <div class="course-overview text-white-jw">
+      <h4 class="text-white-jw">
+        <!-- {{courseDetails.title}}  -->
+        Front Office
+      </h4>
+      <small>
+        DURATION: 1 Days
+      </small>
+      <br> <br>
+      <p>
+        <!-- {{courseDetails.description}} -->
+        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Natus nostrum animi unde dolorem vitae magnam quibusdam ducimus laboriosam, nemo, earum esse fuga quia facere dignissimos provident minima ea error? Temporibus?
+      </p>
+    </div>
+  </div>
+
+  <div class="edit-course-wrap" *ngIf="isVisibleCourseModal">
+    <div class="row">
+      <div class="col-md-8">
+        <label class="text-white-jw" for="">Topic Title</label>
+        <input nz-input placeholder="Name" style="width: 100%" [(ngModel)]="courseTitle" />
+      </div>
+      <div class="col-md-4">
+        <label class="text-white-jw" for="">Duration in days</label>
+        <input nz-input placeholder="Duration" style="width: 100%" [(ngModel)]="courseDuration" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 mt-3">
+        <label class="text-white-jw" for="">Description</label>
+        <textarea rows="9" nz-input [(ngModel)]="courseDescription"></textarea>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <button class="my-3" nz-button nzType="primary" (click)="handleEditCourse()"> Update Topic
+        </button>
+        <button class="my-3 ml-2" nz-button nzType="dashed" (click)="handleCancelCourseEditModal()"> Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<nz-divider></nz-divider>
+<div class="row">
+  <div class="col-md-12">
+    <h4 class="text-white-jw">Chapters</h4>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-10">
+    <!-- <h6 *ngIf="chapters.length == 0">No Chapters found! Please click Add Chapter button to add chapters for this topic.
+    </h6> -->
+    <ul class="list-group">
+      <a class="list-group-item list-group-item-action" [routerLink]="['/', 'hotel', 'chapter', 'acbhaha']">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1">Chatper Title</h5>
+          <small class="text-dark">date</small>
+        </div>
+        <p class="mb-1 text-dark">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus pariatur consequatur rerum nemo ut blanditiis eaque, amet dolorum fuga impedit!</p>
+        <small class="text-dark">10 Pages</small>
+      </a>
+    </ul>
+  </div>
+  <div class="col-md-2">
+    <nz-affix [nzOffsetTop]="10">
+      <button nz-button nzType="primary" (click)="showModal()"><i nz-icon nzType="plus"></i> Add
+        Chapter
+      </button>
+      <button class="my-3" nz-button nzType="primary" (click)="showAddQuizDrawer()"><i nz-icon nzType="question"
+          nzTheme="outline"></i> Add
+        Quiz
+      </button>
+      <button class="mb-3" nz-button nzType="dashed" *ngIf="!isVisibleCourseModal" (click)="showEditCourseModal()"><i
+          nz-icon nzType="edit" nzTheme="outline"></i> Edit
+        Topic
+      </button>
+      <button nz-button nz-popconfirm nzPopconfirmTitle="Are you sure delete this topic?" nzPopconfirmPlacement="bottom"
+        (nzOnConfirm)="deleteCourse(courseDetails.hotel_id)" (nzOnCancel)="deleteCancel()" nzType="danger"><i nz-icon
+          nzType="delete" nzTheme="outline"></i> Delete
+        Topic
+      </button>
+    </nz-affix>
+  </div>
+</div>
+
+<!-- Add Quiz Drawer -->
+
+<nz-drawer [nzClosable]="true" [nzWidth]="840" [nzVisible]="visibleDrawer" nzPlacement="right"
+  (nzOnClose)="closeQuizDrawer()">
+  <!-- <div class="row my-3">
+    <h4 *ngIf="quizzess !== null">{{quizzess.content}}</h4>
+    <h4 *ngIf="quizzess === null">No quiz found! Please add quiz clicking on Add Quiz button</h4>
+  </div> -->
+  <div class="row my-3" *ngIf="isQuestionShow === false">
+    <div class="col-12">
+      <button nz-button nzType="primary" (click)="showQuestion()"><i nz-icon nzType="plus"></i> Add
+        Quiz</button>
+    </div>
+  </div>
+  <div class="question-wrap my-4" *ngIf="isQuestionShow === true">
+    <div class="row my-3" *ngIf="quizzess === null">
+      <div class="col-md-12">
+        <nz-tooltip nzTrigger="focus" nzPlacement="bottom">
+          <label for="">Quiz Title</label>
+          <input nz-input placeholder="Name" style="width: 100%" [(ngModel)]="quizTitle" />
+        </nz-tooltip>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8">
+        <nz-tooltip nzTrigger="focus" nzPlacement="bottom">
+          <label for="">Question</label>
+          <input nz-input placeholder="Question" style="width: 100%" [(ngModel)]="question" />
+        </nz-tooltip>
+      </div>
+      <div class="col-md-4">
+        <label for="">Question Type</label>
+        <nz-select style="width: 100%;" nzShowSearch nzAllowClear nzPlaceHolder="Select Question Type"
+          [(ngModel)]="selectedQuestionType">
+          <nz-option *ngFor="let type of questionTypes" [nzLabel]="type.name" [nzValue]="type.value"></nz-option>
+        </nz-select>
+      </div>
+    </div>
+    <div class="row my-4">
+      <div *ngIf="selectedQuestionType === 'multi_choice'">
+        <div class="col-md-12">
+          <input nz-input placeholder="option 1" style="width: 100%" [(ngModel)]="option1" />
+          <nz-radio-group class="my-2" [(ngModel)]="option1Answer">
+            <label nz-radio nzValue="1">Correct</label>
+            <label nz-radio nzValue="0">Incorrect</label>
+          </nz-radio-group>
+        </div>
+        <div class="col-md-12 my-3">
+          <input nz-input placeholder="option 2" style="width: 100%" [(ngModel)]="option2" />
+          <nz-radio-group class="my-2" [(ngModel)]="option2Answer">
+            <label nz-radio nzValue="1">Correct</label>
+            <label nz-radio nzValue="0">Incorrect</label>
+          </nz-radio-group>
+        </div>
+        <div class="col-md-12">
+          <input nz-input placeholder="option 3" style="width: 100%" [(ngModel)]="option3" />
+          <nz-radio-group class="my-2" [(ngModel)]="option3Answer">
+            <label nz-radio nzValue="1">Correct</label>
+            <label nz-radio nzValue="0">Incorrect</label>
+          </nz-radio-group>
+        </div>
+        <div class="col-md-12 my-3">
+          <input nz-input placeholder="option 4" style="width: 100%" [(ngModel)]="option4" />
+          <nz-radio-group class="my-2" [(ngModel)]="option4Answer">
+            <label nz-radio nzValue="1">Correct</label>
+            <label nz-radio nzValue="0">Incorrect</label>
+          </nz-radio-group>
+        </div>
+      </div>
+
+      <div *ngIf="selectedQuestionType === 'single_choice'" style="width: 100%;">
+        <div class="col-12">
+          <input nz-input placeholder="option 1" [(ngModel)]="option1" style="width: 100%" />
+        </div>
+        <div class="col-12 my-3">
+          <input nz-input placeholder="option 2" [(ngModel)]="option2" style="width: 100%" />
+        </div>
+        <div class="col-12">
+          <input nz-input placeholder="option 3" [(ngModel)]="option3" style="width: 100%" />
+        </div>
+        <div class="col-12 my-3">
+          <input nz-input placeholder="option 4" [(ngModel)]="option4" style="width: 100%" />
+        </div>
+        <div class="col-md-12">
+          <p>Choose Correct Answer</p>
+          <nz-radio-group [(ngModel)]="singleChoiceAnswer" nzName="radiogroup">
+            <label nz-radio nzValue="1">Option 1</label>
+            <label nz-radio nzValue="2">Option 2</label>
+            <label nz-radio nzValue="3">Option 3</label>
+            <label nz-radio nzValue="4">Option 4</label>
+          </nz-radio-group>
+        </div>
+      </div>
+
+      <div *ngIf="selectedQuestionType === 'yes_or_no'">
+        <div class="col-md-12">
+          <p>Choose Correct Answer</p>
+          <nz-radio-group [(ngModel)]="trueFalseAnswer" nzName="radiogroup">
+            <label nz-radio nzValue="0">YES</label>
+            <label nz-radio nzValue="1">NO</label>
+          </nz-radio-group>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <button class="mr-2" nz-button nzType="primary" (click)="onAddQuiz(courseDetails)"><i nz-icon nzType="plus"></i>
+          Add</button>
+        <button nz-button nzType="dashed" (click)="hideQuestion()"><i nz-icon nzType="close"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="quiz-wrap-isShow" *ngIf="quizzess != null">
+    <div class="row quizQuestionWrap" *ngFor="let quizQuestion of quizzess.course_quiz_quetion">
+      <div class="col-md-10">
+        <small style="text-transform: uppercase;">{{quizQuestion.question_type}}</small> <br>
+        <h6>{{quizQuestion.content}}</h6>
+        <h6 class="mt-3" style="text-transform: uppercase; color: #908f8f; font-size: 14px;"
+          *ngIf="quizQuestion.question_type != 'open_ended'">Options</h6>
+        <ul class="list-group" *ngFor="let quizOption of quizQuestion.course_quiz_quetion_option">
+          <li class="list-group-item" *ngIf="quizOption.length != 0">
+            <span style="color: green;" *ngIf="quizOption.is_true == 1">{{quizOption.content}}</span>
+            <span *ngIf="quizOption.is_true === 0">{{quizOption.content}}</span>
+          </li>
+          <p *ngIf="quizOption.length == 0">No options found!</p>
+        </ul>
+      </div>
+      <div class="col-md-2">
+        <button nz-button color="danger" nzType="link" nz-popconfirm
+          nzPopconfirmTitle="Are you sure delete this question?" nzPopconfirmPlacement="bottom"
+          (nzOnConfirm)="deleteQuizQuest(quizQuestion)" (nzOnCancel)="deleteQuizQuestCancel()">
+          <span nz-text nzType="danger">Delete</span>
+        </button>
+      </div>
+    </div>
+  </div> -->
+</nz-drawer>
+
+
+<!-- Add Chapter Modal -->
+
+<!-- <nz-modal [(nzVisible)]="isVisibleAddChapter" nzTitle="Add Chapter" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <div class="row">
+    <div class="col-md-12">
+        <label for="">Chapter Name</label>
+        <input nz-input placeholder="Chapter Name" style="width: 100%" [(ngModel)]="chapterTitle" />
+    </div>
+    <div class="col-md-12 mt-3">
+      <label for="">Description</label>
+      <textarea rows="4" nz-input [(ngModel)]="chapterDescription"></textarea>
+    </div>
+  </div>
+</nz-modal> -->
+
+<nz-drawer [nzClosable]="true" nzTitle="Add Chapter" [nzHeight]="'50%'" [nzVisible]="isVisibleAddChapter"
+  nzPlacement="bottom" (nzOnClose)="handleCancel()">
+  <div class="row">
+    <div class="col-md-12">
+      <label for="">Chapter Name</label>
+      <input nz-input placeholder="Chapter Name" style="width: 100%" [(ngModel)]="chapterTitle" />
+    </div>
+    <div class="col-md-12 mt-3">
+      <label for="">Description</label>
+      <textarea rows="4" nz-input [(ngModel)]="chapterDescription"></textarea>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <button class="my-3" nz-button nzType="primary" (click)="handleOk()"> Add Chapter
+      </button>
+      <button class="my-3 ml-2" nz-button nzType="dashed" (click)="handleCancel()"> Cancel
+      </button>
+    </div>
+  </div>
+</nz-drawer>
+
+
+<!-- Edit Course Modal -->
+
+<!-- <nz-modal [(nzVisible)]="isVisibleCourseModal" nzTitle="Edit Topic" (nzOnCancel)="handleCancelCourseEditModal()"
+  (nzOnOk)="handleEditCourse()">
+  <div class="row">
+    <div class="col-md-8">
+      <label for="">Topic Title</label>
+      <input nz-input placeholder="Name" style="width: 100%" [(ngModel)]="courseTitle" />
+    </div>
+    <div class="col-md-4">
+      <label for="">Duration in days</label>
+      <input nz-input placeholder="Duration" style="width: 100%" [(ngModel)]="courseDuration" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 mt-3">
+      <label for="">Description</label>
+      <textarea rows="4" nz-input [(ngModel)]="courseDescription"></textarea>
+    </div>
+  </div>
+</nz-modal> -->
