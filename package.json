@@ -28,7 +28,7 @@
     "@salesforce-ux/design-system": "^2.11.6",
     "bootstrap": "^4.4.1",
     "hammerjs": "^2.0.8",
-    "highcharts": "^8.0.4",
+    "highcharts": "^9.0.0",
     "highcharts-angular": "^2.4.0",
     "jquery": "^3.4.1",
     "ng-lightning": "^6.0.0",
